@@ -1,0 +1,68 @@
+@if(notificationAppService.showContainer()){
+    <div class="fixed top-0 inset-x-0 z-[101] flex flex-col">
+        @for(notificationIntm of notificationAppService.notifications(); track notificationIntm ){
+            <div  class="slide-down-fade-in flex items-center justify-between px-4 py-4 text-white shadow-low  transition ease-in-out duration-300 mb-8"
+                [ngClass]="{
+                    'bg-red-300': notificationIntm.type === 'error',
+                    'bg-green-300': notificationIntm.type === 'success',
+                    'bg-yellow-300': notificationIntm.type === 'warning',
+                    'bg-blue-300': notificationIntm.type === 'info'
+                }"
+                >
+                <div class="flex items-center">
+                    <div class="flex items-center mr-8">
+                        @switch(notificationIntm.type){
+                            @case("success"){
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <g clip-path="url(#clip0_7663_2510)">
+                                        <path d="M4.66683 9.00001L6.3335 10.6667L11.0002 6.00001M14.6668 8.00001C14.6668 11.6819 11.6821 14.6667 8.00016 14.6667C4.31826 14.6667 1.3335 11.6819 1.3335 8.00001C1.3335 4.31811 4.31826 1.33334 8.00016 1.33334C11.6821 1.33334 14.6668 4.31811 14.6668 8.00001Z" stroke="#05A36E" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_7663_2510">
+                                            <rect width="16" height="16" fill="white"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            }
+                            @case("error"){
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <path d="M7.66683 5.68611V9.40889M7.66683 11.6425V11.717M6.38331 3.40076L1.54135 11.6321C0.957415 12.6248 1.67316 13.8762 2.82487 13.8762H12.5088C13.6605 13.8762 14.3762 12.6248 13.7923 11.6321L8.95034 3.40076C8.37458 2.42196 6.95908 2.42196 6.38331 3.40076Z" stroke="#D92626" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            }
+                            @case("info"){
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <g clip-path="url(#clip0_7663_2917)">
+                                        <path d="M8.00016 11.7777V7.11108M8.00016 4.66665V4.59998M14.6668 7.99998C14.6668 11.6819 11.6821 14.6666 8.00016 14.6666C4.31826 14.6666 1.3335 11.6819 1.3335 7.99998C1.3335 4.31808 4.31826 1.33331 8.00016 1.33331C11.6821 1.33331 14.6668 4.31808 14.6668 7.99998Z" stroke="#0080F6" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_7663_2917">
+                                            <rect width="16" height="16" fill="white"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            }
+                            @case("warning"){
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <g clip-path="url(#clip0_7663_2819)">
+                                        <path d="M7.99984 4.22226V8.88892M7.99984 11.3334V11.4M1.33317 8.00002C1.33317 4.31812 4.31794 1.33335 7.99984 1.33335C11.6817 1.33335 14.6665 4.31812 14.6665 8.00002C14.6665 11.6819 11.6817 14.6667 7.99984 14.6667C4.31794 14.6667 1.33317 11.6819 1.33317 8.00002Z" stroke="#EA9F2D" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_7663_2819">
+                                            <rect width="16" height="16" fill="white" transform="matrix(-1 0 0 -1 16 16)"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            }
+                        }
+                    </div>
+                    <span class="font-helvetica-now-regular font-regular text-14 leading-20 -tracking-0-5 text-content-high">{{ notificationIntm.message }}</span>
+                </div>
+                <button (click)="toggleIsVisible(notificationIntm.id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M12.6663 3.33334L3.33301 12.6667M3.33301 3.33334L12.6663 12.6667" stroke="#131D34" stroke-opacity="0.65" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+        }
+    </div>
+}

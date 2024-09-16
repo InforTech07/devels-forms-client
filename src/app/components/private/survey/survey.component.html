@@ -1,0 +1,130 @@
+<section class="flex flex-col gap-4 items-center bg-gray-50 dark:bg-gray-900">
+    @if(survey.id !== 0){
+        <div class="w-full max-w-screen-xl px-4 mx-auto lg:px-12">
+          <!-- Start coding here -->
+          <div class="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+            <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+              <div>
+                <h5 class="mr-3 font-semibold dark:text-white">{{survey.name}}</h5>
+                <p class="text-gray-500 dark:text-gray-400">{{survey.description}}</p>
+              </div>
+              <div>
+                  <button 
+                        type="button"
+                        (click)="newQuestion()"
+                        class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                    Agregar pregunta
+                  </button>
+              </div>
+            </div>
+            @for (question of questions; track $index){
+                <hr class="border-t border-gray-200 dark:border-gray-700">
+                <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4 bg-gray-100">
+                    <div>
+                        <h5 class="mr-3 font-semibold dark:text-white">{{$index + 1 +'.'}}{{question.text}}</h5>
+                        <p class="text-gray-500 dark:text-gray-400">{{question.type}}</p>
+                    </div>
+                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                        <button (click)="deleteQuestion(question.id || 0)" type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 12V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14 12V17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M4 7H20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 10V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V10" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        </button>
+                        <button (click)="editQuestion(question.id || 0)" type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
+                        <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M8.56078 20.2501L20.5608 8.25011L15.7501 3.43945L3.75012 15.4395V20.2501H8.56078ZM15.7501 5.56077L18.4395 8.25011L16.5001 10.1895L13.8108 7.50013L15.7501 5.56077ZM12.7501 8.56079L15.4395 11.2501L7.93946 18.7501H5.25012L5.25012 16.0608L12.7501 8.56079Z" fill="#080341"></path> </g></svg>
+                        </button>
+                    </div>
+                </div>
+                @for( option of question.options; track $index){
+                    <hr class="border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4 bg-white">
+                        <div>
+                            <h5 class="mr-3 font-semibold dark:text-white">{{option.label}}</h5>
+                            <p class="text-gray-500 dark:text-gray-400">{{question.type}}</p>
+                        </div>
+                        <div class="inline-flex rounded-md shadow-sm" role="group">
+                            <button (click)="editQuestion(question.id || 0)" type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
+                                <svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M8.56078 20.2501L20.5608 8.25011L15.7501 3.43945L3.75012 15.4395V20.2501H8.56078ZM15.7501 5.56077L18.4395 8.25011L16.5001 10.1895L13.8108 7.50013L15.7501 5.56077ZM12.7501 8.56079L15.4395 11.2501L7.93946 18.7501H5.25012L5.25012 16.0608L12.7501 8.56079Z" fill="#080341"></path> </g></svg>
+                            </button>
+                        </div>
+                    </div>
+                }
+            }
+            @if(showSurveyQuestionForm){
+                <section class="bg-white w-full">
+                    <div class="py-8 px-4 mx-auto max-w-xl lg:py-16">
+                        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Nueva pregunta</h2>
+                        @if(newQuestionForm){
+                            <div>
+                                <form [formGroup]="newQuestionForm">
+                                    <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                                        <div class="sm:col-span-2">
+                                            <label for="text" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pregunta:</label>
+                                            <input formControlName="text" type="text" name="text" id="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="pregunta...?" required="">
+                                        </div>
+                                        <div class="sm:col-span-2">
+                                            <label for="type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de pregunta</label>
+                                            <select formControlName="type" id="type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                                <option value="text">Texto</option>
+                                                <option value="date">Fecha</option>
+                                                <option value="number">Numerico</option>
+                                                <option value="single-choice">Solo una opcion</option>
+                                                <option value="multiple-choice">Multiples opciones</option>
+                                            </select>
+                                        </div>
+                                        <div class="flex items-center mb-4">
+                                            <input formControlName="required" id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Obligatorio</label>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                @if(showQuestionOptionForm && newOptionForm){
+                                    <div>
+                                        <form [formGroup]="newOptionForm">
+                                            <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                                                <div class="sm:col-span-2">
+                                                    <label for="option-label" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Respuesta</label>
+                                                    <input formControlName="label" type="text" name="label" id="option-label" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="respuesta" required="">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                }
+                                <button type="button" (click)="showQuestionOptionForm ? submitOption($event) :submitQuestion($event)" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                                    Agregar
+                                </button>
+                            </div>
+                        }
+                        
+                    </div>
+                </section>
+            }
+          </div>
+        </div>
+    }
+    @if(showSurveyForm){
+        <section class="bg-white w-full">
+            <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+                <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Nueva Encuesta</h2>
+                @if(newSurveyForm){
+                    <form [formGroup]="newSurveyForm">
+                        <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+                            <div class="sm:col-span-2">
+                                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre:</label>
+                                <input formControlName="name" type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Mi encuesta" required="">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                                <textarea  formControlName="description" id="description" rows="8" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="La encuesta ..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <button type="button" (click)="submitSurvey($event)" class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                        Crear Encuesta
+                    </button>
+                }
+            </div>
+          </section>
+        }
+  </section>
+
+  
