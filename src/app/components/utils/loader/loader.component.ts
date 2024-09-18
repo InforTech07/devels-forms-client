@@ -13,7 +13,6 @@ import { LoaderService } from "src/app/services/loader.service";
                 </div>
             }
     `,
-    standalone: true,
     styles: [`
         .loader {
             width: 50px;
@@ -43,11 +42,12 @@ import { LoaderService } from "src/app/services/loader.service";
         @keyframes l12 { 
         100%{transform: rotate(.5turn)}
         }
-    `]
+    `],
+    standalone: true,
+    providers: [LoaderService]
 })
 export class LoaderComponent {
-    public loaderService = inject(LoaderService);
 
-    constructor() {}
+    constructor(public loaderService: LoaderService) {}
 
 }

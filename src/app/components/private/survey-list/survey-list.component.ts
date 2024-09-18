@@ -12,6 +12,7 @@ import { NotificationService } from "src/app/services/notification.service";
 export class SurveyListComponent implements OnInit {
 
   surveys: Survey[] = [];
+  surveyPreview!: Survey;
 
   constructor(
     private router: Router, 
@@ -41,6 +42,10 @@ export class SurveyListComponent implements OnInit {
       }
       );
     }
+  }
+
+  showPreview(id: number) {
+    this.router.navigate([`app/survey/${id}/preview`]);
   }
 
 }

@@ -1,0 +1,90 @@
+<section class="flex flex-col gap-4 items-center pt-4">
+    @if(survey){
+        <div class="w-full bg-white max-w-screen-xl px-4 mx-auto lg:px-12">
+            <div class="relative w-full  max-w-screen-xl overflow-hidden shadow-md sm:rounded-lg">
+                <div class="flex-row items-center justify-center p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                    <div class="flex flex-col justify-center items-center">
+                        <h5 class="mr-3 font-semibold dark:text-white">{{survey.name}}</h5>
+                        <p class="text-gray-500 dark:text-gray-400">{{survey.description}}</p>
+                        <h5 class="mr-3 font-semibold dark:text-white"> Creado Por: {{survey.createdBy?.email}}</h5>
+                        <p class="text-gray-500 dark:text-gray-400">{{survey.createdAt }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if(surveyResponseForm){
+            <form [formGroup]="surveyResponseForm" class="w-full">
+                <div formArrayName="responses" class="flex flex-col items-center gap-4">
+                    @for(response of responses.controls; track $index){
+                        {{response.errors}}
+                        <div [formGroupName]="$index" class="w-full max-w-screen-xl relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg {{response.errors ? 'border border-red-400':''}}">
+                            @if(survey && survey.questions){
+                                <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                                    <h5 class="mr-3 font-semibold dark:text-white"> {{ $index + 1 + "."}}{{survey.questions[$index].text}}</h5>
+                                    @if(survey.questions[$index].required){
+                                          <span class="text-sm font-medium text-gray-900 dark:text-white">Obligatorio</span>
+                                    }
+                                </div>
+                            }
+                            <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4 bg-gray-100">
+
+                                @if( survey && survey.questions && survey.questions[$index].type == 'text'){
+                                    <div class="flex flex-col gap-2">
+                                        <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingrese su respuesta en texto:</label>
+                                        <input formControlName="textAnswer" type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Respuesta ..." required />
+                                    </div>
+                                }
+                                @if(survey && survey.questions && survey.questions[$index].type == 'number'){
+                                    <div class="flex flex-col gap-2">
+                                        <label for="number-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingrese un numero:</label>
+                                        <input formControlName="numberAnswer" type="number" id="number-input" aria-describedby="helper-text-explanation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="90210" required />
+                                    </div>
+                                }
+                                @if(survey && survey.questions && survey.questions[$index].type == 'date'){
+                                    <div class="flex flex-col gap-2">
+                                        <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ingrese una fecha: </label>
+                                        <input formControlName="dateAnswer" type="date" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                                    </div>
+                                }
+                                @if(survey && survey.questions && survey.questions[$index].type == 'single-choice'){
+                                    <!--agregar un checkbox para que marque si esta deacuerdo o no-->
+                                    <div class="flex flex-col gap-2">
+                                        <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Marque si esta deacuerdo: </label>
+                                        <div class="flex flex-col gap-2">
+                                            <div class="flex items-center gap-2">
+                                                <input formControlName="singleChoiceAnswer" type="checkbox" id="first_name" class="bg-gray-50 " required />
+                                                <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    hola
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if(survey && survey.questions && survey.questions[$index].type == 'multiple-choice'){
+                                    <!--agregar un checkbox para que marque si esta deacuerdo o no-->
+                                    <div class="flex flex-col gap-2" formArrayName="selectedOptions" >
+                                        <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione sus respuestas </label>
+                                        @for(option of survey.questions[$index].options; track $index){
+                                            <div class="flex flex-col gap-2" [formGroupName]="$index" >
+                                                <div class="flex items-center gap-2">
+                                                    <input formControlName="selected" type="checkbox" id="first_name" class="bg-gray-50 " required />
+                                                    <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                        {{option.label}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    <button type="button" (click)="submit()" class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" >
+                        Enviar respuestas
+                    </button>
+                </div>
+            </form>
+        }
+    }
+</section> 

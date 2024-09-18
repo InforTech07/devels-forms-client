@@ -1,25 +1,23 @@
-import { Injectable, signal, computed } from '@angular/core';
-
+import { Injectable, signal } from '@angular/core';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LoaderService {
-    #loading = signal<boolean>(false);
-
-    public loading = computed(() => this.#loading());
+    // Definir un signal para controlar el estado de carga
+    public loading = signal(false);
 
     constructor() {}
 
-    private setLoading(loading: boolean) {
-        this.#loading.set(loading);
-    }
-    
     show() {
-        this.setLoading(true);
+        // Cambiar el estado a true para mostrar el loader
+        this.loading.set(true);
+        console.log('Loader mostrado', this.loading());
     }
 
     hide() {
-        this.setLoading(false);
+        // Cambiar el estado a false para ocultar el loader
+        this.loading.set(false);
+        console.log('Loader ocultado', this.loading());
     }
 }

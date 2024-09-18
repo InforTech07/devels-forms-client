@@ -5,6 +5,11 @@ import { FullLayoutComponent } from './components/layouts/full-layout/full.layou
 export const routes: Routes = [
     {
         path: '',
+        redirectTo: 'login',
+        pathMatch: 'full'
+    },
+    {
+        path: '',
         component: SimpleLayoutComponent,
         children: [
             {

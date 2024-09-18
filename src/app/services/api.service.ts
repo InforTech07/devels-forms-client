@@ -42,13 +42,11 @@ export class ApiService {
    * @param headers
    */
     private setToken(headers: HttpHeaders): HttpHeaders {
-        const TOKEN: string = this.storage.get('session.token');
-        const TOKEN_TYPE: string = this.storage.get('session.tokenType');
-        const DYNAMIC_TOKEN: string = this.storage.get('session.dynamicToken');
+        const TOKEN: string = this.storage.get('session.access_token');
+        console.log(TOKEN);
 
-        if (TOKEN && DYNAMIC_TOKEN) {
-            headers = headers.set('Authorization', `${TOKEN_TYPE} ${TOKEN}`);
-            headers = headers.set('dynamicToken', DYNAMIC_TOKEN);
+        if (TOKEN) {
+            headers = headers.set('Authorization', `Bearer ${TOKEN}`);
         }
 
         return headers;

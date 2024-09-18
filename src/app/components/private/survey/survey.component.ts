@@ -15,7 +15,11 @@ export class SurveyComponent implements OnInit {
   public showSurveyForm: boolean = true;
   public showSurveyQuestionForm: boolean = false;
   public showQuestionOptionForm: boolean = false;
+  public previewMode: boolean = false;
   public editMode: boolean = false;
+
+  public isMultiChoice: boolean = false;
+  public idQuestionMultiChoice: number = 0;
   public survey: Survey = {
     id: 0,
     name: "",
@@ -54,7 +58,6 @@ export class SurveyComponent implements OnInit {
           });
         }else {
           this.initNewSurveyForm();
-          this.initNewQuestionForm();
         }
       });
   }
@@ -95,6 +98,7 @@ export class SurveyComponent implements OnInit {
     if(this.newSurveyForm.valid) {
       this.loader.show();
       this.surveyService.newSurvey(this.newSurveyForm.value).subscribe((response) => {
+        response.questions = [];
         this.survey = response;
         this.showSurveyForm = false;
         this.loader.hide();
@@ -115,18 +119,21 @@ export class SurveyComponent implements OnInit {
       this.loader.show();
       this.surveyService.addQuestion(this.newQuestionForm.value).subscribe((response) => {
         if(response.type == "text" || response.type == "number" || response.type == "date") {
-          
-          this.generateOptionForm(response.type, response.id);
-          this.submitOption($event);
+          this.survey.questions?.push(response);
+          this.showSurveyQuestionForm = false;
         }
-        if(response.type == "single-choice"){
-          this.generateOptionForm(response.type, response.id);
-          this.showQuestionOptionForm = true;
-        }
-        response.options = [];
-        this.questions.push(response);
         this.loader.hide();
         this.notification.success("Pregunta creada correctamente", 3000);
+        if(response.type == "single-choice") {
+          this.initOptionQuestionForm(response.id);
+          this.showQuestionOptionForm = true;
+        }
+        if(response.type == "multiple-choice") {
+          this.initOptionQuestionForm(response.id);
+          this.showQuestionOptionForm = true;
+          this.isMultiChoice = true;
+          this.idQuestionMultiChoice = response.id;
+        }
       });
     }else {
       console.log("Invalid form");
@@ -139,42 +146,27 @@ export class SurveyComponent implements OnInit {
       this.loader.show();
       this.surveyService.addOption(this.newOptionForm.value).subscribe((response) => {
         if(response) {
-          const question = this.questions.find((question) => question.id == response.surveyQuestionId);
+          const question = this.survey.questions?.find((question) => question.id == response.surveyQuestionId);
           if(question?.options){
             question.options.push(response);
           }
         }
-        this.showSurveyForm = false;
-        this.showSurveyQuestionForm = false;
-        this.showQuestionOptionForm = false;
-        this.newQuestionForm.reset();
-        this.newOptionForm.reset();
-        this.notification.success("Opción creada correctamente", 3000);
-        this.loader.hide();
+        if(!this.isMultiChoice) {
+          this.showSurveyForm = false;
+          this.showSurveyQuestionForm = false;
+          this.showQuestionOptionForm = false;
+          this.newQuestionForm.reset();
+          this.newOptionForm.reset();
+          this.notification.success("Opción creada correctamente", 3000);
+          this.loader.hide();
+        }else{
+          this.initOptionQuestionForm(this.idQuestionMultiChoice);
+          this.notification.success("Opción creada correctamente", 3000);
+          this.loader.hide();
+        }
       });
     }else {
       console.log("Invalid form");
-    }
-  }
-
-  private generateOptionForm(type: string, questionId: number) {
-    this.initOptionQuestionForm();
-    switch(type) {
-      case "text":
-        this.newOptionForm.setValue({label: "Ingrese texto", isCorrect: false, surveyQuestionId: questionId});
-        break;
-      case "number":
-        this.newOptionForm.setValue({label: "Ingrese un número", isCorrect: false, surveyQuestionId: questionId});
-        break;
-      case "date":
-        this.newOptionForm.setValue({label: "Ingrese una fecha", isCorrect: false, surveyQuestionId: questionId});
-        break;
-      case "single-choice":
-        this.newOptionForm.setValue({label: "", isCorrect: true, surveyQuestionId: questionId});
-        break;
-      default:
-        this.newOptionForm.setValue({label: "Ingrese una opción", isCorrect: false, surveyQuestionId: questionId});
-        break;
     }
   }
 
@@ -184,5 +176,24 @@ export class SurveyComponent implements OnInit {
 
   public editQuestion(id: number) {
     console.log(id);
+  }
+
+  public copyToClipboard(code: string) {
+    if (!code) {
+      this.notification.error("No enlace para copiar", 3000);
+      return;
+    }
+
+    let link = `https://${window.location.host}/survey-response/${code}`;
+
+    if(window.location.protocol === 'http:'){
+      link = `http://${window.location.host}/survey-response/${code}`;
+    }
+
+    navigator.clipboard.writeText(link).then(() => {
+      this.notification.success("Enlace copiado al portapapeles", 3000);
+    }, (error) => {
+      this.notification.error("No se pudo copiar el enlace", 3000);
+    });
   }
 }
